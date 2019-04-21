@@ -118,7 +118,12 @@ const Grid = () => {
   const [state, dispatch] = useReducer(reducer, initialState, init);
 
   return (
-    <svg width={800} height={608} fill="black" className="mt-10">
+    <svg
+      width={settings.width}
+      height={settings.height}
+      fill="black"
+      className="mt-10"
+    >
       {Object.keys(state.grid).map(key => {
         const coords = JSON.parse(key);
         let highlight = false;
