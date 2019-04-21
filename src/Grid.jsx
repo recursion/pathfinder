@@ -54,8 +54,8 @@ const reducer = (state, action) => {
       if (state.setting.type !== "") {
         const nextGrid = {
           ...state.grid,
-          [coords]: state.setting.type,
-          [state.setting.position]: EMPTY
+          [state.setting.position]: EMPTY,
+          [coords]: state.setting.type
         };
         return {
           ...state,
@@ -108,6 +108,13 @@ const Grid = () => {
     <svg width={800} height={608} fill="black" className="mt-10">
       {Object.keys(state.grid).map(key => {
         const coords = JSON.parse(key);
+        let highlight = false;
+        if (
+          state.setting.locationType !== "" &&
+          state.setting.position === key
+        ) {
+          highlight = true;
+        }
         return (
           <Location
             key={key}
@@ -115,6 +122,7 @@ const Grid = () => {
             type={state.grid[key]}
             settings={settings}
             dispatch={dispatch}
+            highlight={highlight}
           />
         );
       })}
