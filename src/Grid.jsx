@@ -52,6 +52,19 @@ const reducer = (state, action) => {
     case "CHANGE_LOCATION":
       // we have already started a source or destination change
       if (state.setting.type !== "") {
+        // dont allow replacing source with destination or vice-versa
+        if (
+          state.setting.type === DESTINATION &&
+          state.grid[coords] === SOURCE
+        ) {
+          return state;
+        }
+        if (
+          state.setting.type === SOURCE &&
+          state.grid[coords] === DESTINATION
+        ) {
+          return state;
+        }
         const nextGrid = {
           ...state.grid,
           [state.setting.position]: EMPTY,
