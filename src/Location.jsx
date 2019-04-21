@@ -10,9 +10,23 @@ const Location = ({ coords, type, settings, highlight, dispatch }) => {
       height={settings.tileSize}
       fill={highlight ? "lightblue" : colors[type]}
       stroke="grey"
-      onClick={() => {
+      onMouseDown={() => {
         dispatch({
-          type: "CHANGE_LOCATION",
+          type: "START_PAINT",
+          locationType: type,
+          coords: coords
+        });
+      }}
+      onMouseOver={() => {
+        dispatch({
+          type: "PAINT",
+          locationType: type,
+          coords: coords
+        });
+      }}
+      onMouseUp={() => {
+        dispatch({
+          type: "STOP_PAINT",
           locationType: type,
           coords: coords
         });

@@ -12,8 +12,9 @@ import {
 
 const initialState = {
   grid: {},
-  setting: {
-    type: "",
+  action: {
+    type: "NONE",
+    locationType: "",
     position: { x: 0, y: 0 }
   }
 };
@@ -37,79 +38,82 @@ const makeGrid = (settings, source, destination) => {
 const init = () => {
   return {
     grid: makeGrid(settings, initialSource, initialDestination),
-    setting: initialState.setting
+    action: initialState.action
   };
-};
-
-const trace = o => {
-  console.log(o);
-  return o;
 };
 
 const reducer = (state, action) => {
   const coords = JSON.stringify(action.coords);
   switch (action.type) {
-    case "CHANGE_LOCATION":
-      // we have already started a source or destination change
-      if (state.setting.type !== "") {
-        // dont allow replacing source with destination or vice-versa
-        if (
-          state.setting.type === DESTINATION &&
-          state.grid[coords] === SOURCE
-        ) {
+    case "START_PAINT":
+      switch (state.action.type) {
+        case "MOVE":
+          // dont allow replacing source with destination or vice-versa
+          if (
+            state.action.locationType === DESTINATION &&
+            state.grid[coords] === SOURCE
+          ) {
+            return state;
+          }
+          if (
+            state.action.locationType === SOURCE &&
+            state.grid[coords] === DESTINATION
+          ) {
+            return state;
+          }
+          const nextGrid = {
+            ...state.grid,
+            [state.action.position]: EMPTY,
+            [coords]: state.action.locationType
+          };
+          return { ...state, grid: nextGrid, action: initialState.action };
+        case "NONE":
+          return {
+            ...state,
+            grid: {
+              ...state.grid,
+              [coords]: action.locationType === WALL ? EMPTY : WALL
+            },
+            action: {
+              type:
+                action.locationType === SOURCE ||
+                action.locationType === DESTINATION
+                  ? "MOVE"
+                  : "PAINT",
+              locationType: action.locationType,
+              position: coords
+            }
+          };
+        default:
           return state;
-        }
-        if (
-          state.setting.type === SOURCE &&
-          state.grid[coords] === DESTINATION
-        ) {
-          return state;
-        }
-        const nextGrid = {
-          ...state.grid,
-          [state.setting.position]: EMPTY,
-          [coords]: state.setting.type
-        };
-        return {
-          ...state,
-          grid: nextGrid,
-          setting: initialState.setting
-        };
-      } else {
-        // no current action in progress
-        switch (action.locationType) {
-          case EMPTY:
-            // change empty locations to walls
-            return {
-              ...state,
-              grid: {
-                ...state.grid,
-                [coords]: WALL
-              }
-            };
-          case WALL:
-            // change walls to empty locations
-            return {
-              ...state,
-              grid: {
-                ...state.grid,
-                [coords]: EMPTY
-              }
-            };
-
-          default:
-            // otherwise we are initiating a new source/destination change
-            return {
-              ...state,
-              setting: {
-                type: action.locationType,
-                position: JSON.stringify(action.coords)
-              }
-            };
-        }
       }
+
+    case "PAINT":
+      if (state.action.type !== "PAINT") return state;
+      switch (action.locationType) {
+        case DESTINATION:
+        case SOURCE:
+          return state;
+        case WALL:
+          return { ...state, grid: { ...state.grid, [coords]: EMPTY } };
+        case EMPTY:
+          return { ...state, grid: { ...state.grid, [coords]: WALL } };
+        default:
+          return state;
+      }
+
+    case "STOP_PAINT":
+      switch (state.action.type) {
+        case "MOVE":
+          return state;
+        case "PAINT":
+          // stop painting
+          return { ...state, action: initialState.action };
+        default:
+          return state;
+      }
+
     default:
-      console.error(`Unhandled action type: ${action.type}`);
       return state;
   }
 };
@@ -128,8 +132,9 @@ const Grid = () => {
         const coords = JSON.parse(key);
         let highlight = false;
         if (
-          state.setting.locationType !== "" &&
-          state.setting.position === key
+          (state.action.locationType === SOURCE ||
+            state.action.locationType === DESTINATION) &&
+          state.action.position === key
         ) {
           highlight = true;
         }
