@@ -2,100 +2,6 @@ import { WALL } from "./config";
 export const initialState = { path: [], found: false };
 
 const coordToString = coords => JSON.stringify(coords);
-const stringToCoord = str => JSON.parse(str);
-
-const hasPosition = (closedList, pos) => {
-  let has = false;
-  closedList.forEach(item => {
-    let itemPos = stringToCoord(item.position);
-    if (itemPos.x === pos.x && itemPos.y === pos.y) {
-      has = true;
-    }
-  });
-  return has;
-};
-
-export const findPath = (source, destination, grid, open, closed) => {
-  open = open || [];
-  closed = closed || [];
-  let done = false;
-
-  if (closed.length === 0) {
-    // put the starting position on the closed list
-    closed.push({ position: coordToString(source), parent: null });
-  }
-
-  // find the available movements from the current position (head of closed)
-  const availableMoves = getAvailableMoves(
-    stringToCoord(closed[0].position),
-    grid
-  );
-  availableMoves.forEach(pos => {
-    // if pos is the destination
-    // add it to the closed list and be done
-    if (pos.x === destination.x && pos.y === destination.y) {
-      closed.unshift({ position: coordToString(pos), parent: closed[0] });
-      done = true;
-    } else if (!hasPosition(closed, pos)) {
-      // if pos is in the closed list
-      // ignore it
-      // if pos is not in the open list
-      // add it and compute its score
-      if (!open.includes(coordToString(pos))) {
-        // TODO: calculate score here, and just put scored items on the open list
-        open.push(score(pos, source, destination));
-      }
-    }
-    // TODO: figure out wtf this means?
-    // if pos is already in the open list
-    // check the f score based on current movement
-    // if it is lower than previous score, update its score, and parent? (WTF?)
-  });
-
-  if (!done) {
-    // find the lowest score
-    const lowestF = findLowestF(open);
-
-    // remove the lowest score from the open list
-    const lowest = open[lowestF];
-    open.splice(lowestF, 1);
-
-    // add it to the head of the closed list
-    closed.unshift({
-      position: coordToString(lowest.position),
-      parent: closed[0]
-    });
-
-    // console.log(`Open: ${JSON.stringify(open)}`);
-    // console.log(`Closed: ${JSON.stringify(closed)}`);
-    return findPath(source, destination, grid, open, closed);
-  } else {
-    const path = [];
-    let node = closed[0];
-    while (node) {
-      path.push(node.position);
-      node = node.parent;
-    }
-    return { path, found: true };
-  }
-};
-
-/**
- * Find the lowest F score in a scored list of positions.
- * @param {*} list
- * return the index of the lowestF scored item in the list
- */
-const findLowestF = list => {
-  let lowest = 1000;
-  let lowestIndex;
-  list.forEach((item, i) => {
-    if (item.g + item.h < lowest) {
-      lowest = item.g + item.h;
-      lowestIndex = i;
-    }
-  });
-  return lowestIndex;
-};
 
 /**
  * Score a list of positions based on A* G+H=F score system
@@ -113,11 +19,9 @@ const score = (pos, sourcePos, destination) => {
   const G = gX + gY;
 
   // calculate (H) - current square to destination;
-  const hX = Math.abs(pos.x - destination.x);
-  const hY = Math.abs(pos.y - destination.y);
-  const H = hX + hY;
+  const H = distanceToEnd(pos, destination);
 
-  return { position: pos, g: G, h: H };
+  return { position: pos, g: G, h: H, f: G + H, parent: null };
 };
 
 /**
@@ -155,4 +59,90 @@ const getAvailableMoves = (currentPos, grid) => {
   }
 
   return available;
+};
+
+const backTrack = path => {
+  const result = [];
+  let node = path[0];
+  while (node) {
+    result.push(JSON.stringify(node.position));
+    if (!node.parent) break;
+    node = node.parent;
+  }
+  return { path: result };
+};
+
+const distanceToEnd = (pos, destination) => {
+  const hX = Math.abs(pos.x - destination.x);
+  const hY = Math.abs(pos.y - destination.y);
+  return hX + hY;
+};
+
+export const findPath = (
+  source,
+  destination,
+  grid,
+  open,
+  closed,
+  openHash,
+  closedHash
+) => {
+  return new Promise((resolve, reject) => {
+    open = open || [];
+    closed = closed || [];
+    openHash = openHash || {};
+    closedHash = closedHash || {};
+    const startTime = Date.now();
+
+    if (open.length === 0) open.push(score(source, source, destination));
+
+    //debugger;
+    while (open.length > 0) {
+      // remove item from top of open list
+      const current = open.shift();
+      delete openHash[JSON.stringify(current.position)];
+      closed.unshift(current);
+      closedHash[JSON.stringify(current.position)] = current;
+
+      if (
+        current.position.x === destination.x &&
+        current.position.y === destination.y
+      ) {
+        return resolve(backTrack(closed));
+      }
+
+      const children = getAvailableMoves(current.position, grid);
+
+      for (let i = 0; i < children.length; i++) {
+        if (closedHash[JSON.stringify(children[i])]) {
+          continue;
+        }
+
+        let node = {};
+        node.position = children[i];
+        node.g = current.g + 1;
+        node.h = distanceToEnd(node.position, destination);
+        node.f = node.g + node.h;
+        node.parent = current;
+
+        const openContains = openHash[JSON.stringify(node.position)];
+        if (openContains) {
+          if (openContains.g < node.g) {
+            continue;
+          }
+        }
+        open.push(node);
+        open.sort((a, b) => a.f > b.f);
+        openHash[JSON.stringify(node.position)] = node;
+      }
+      if (Date.now() - startTime > 15) {
+        break;
+      }
+    }
+    setTimeout(() => {
+      resolve(
+        findPath(source, destination, grid, open, closed, openHash, closedHash)
+      );
+    }, 0);
+  });
 };

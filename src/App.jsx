@@ -17,14 +17,13 @@ const App = () => {
         <div className="border rounded p-5 flex flex-col justify-around items-start ml-5">
           <button
             className="btn btn-blue"
-            onClick={() => {
-              setPath(prevState => {
-                return PathFinder.findPath(
-                  grid.source,
-                  grid.destination,
-                  grid.grid
-                );
-              });
+            onClick={async () => {
+              const path = await PathFinder.findPath(
+                grid.source,
+                grid.destination,
+                grid.grid
+              );
+              setPath(path);
             }}
           >
             Find Path
