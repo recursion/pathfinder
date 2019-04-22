@@ -19,8 +19,11 @@ const App = () => {
             className="btn btn-blue"
             onClick={() => {
               setPath(prevState => {
-                console.log(prevState);
-                return PathFinder.findPath(prevState, grid);
+                return PathFinder.findPath(
+                  grid.source,
+                  grid.destination,
+                  grid.grid
+                );
               });
             }}
           >

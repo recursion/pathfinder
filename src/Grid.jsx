@@ -173,7 +173,6 @@ const Grid = ({ grid, dispatch, path }) => {
         }
         if (path.path.includes(key)) {
           markPath = true;
-          console.log("PATH MARKED!");
         }
         return (
           <Location
