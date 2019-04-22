@@ -13,7 +13,7 @@ import {
 const initialState = {
   grid: {},
   action: {
-    type: "NONE",
+    type: "",
     locationType: "",
     position: { x: 0, y: 0 }
   }
@@ -87,7 +87,7 @@ const reducer = (state, action) => {
       switch (state.action.type) {
         case "MOVE":
           return movePiece(state, action);
-        case "NONE":
+        case "":
           return paint(state, action);
         default:
           console.error(`Unhandled action ${action.type} ${state.action.type}`);
@@ -114,7 +114,7 @@ const reducer = (state, action) => {
     case "STOP_PAINT":
       switch (state.action.type) {
         case "MOVE":
-        case "NONE":
+        case "":
           return state;
         case "PAINT_WALL":
         case "PAINT_EMPTY":
