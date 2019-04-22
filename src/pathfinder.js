@@ -28,26 +28,26 @@ export const findPath = (source, destination, grid, open, closed) => {
       // if pos is not in the open list
       // add it and compute its score
       if (!open.includes(coordToString(pos))) {
-        open.push(coordToString(pos));
+        // TODO: calculate score here, and just put scored items on the open list
+        open.push(score(pos, source, destination));
       }
     }
+    // TODO: figure out wtf this means?
     // if pos is already in the open list
     // check the f score based on current movement
     // if it is lower than previous score, update its score, and parent? (WTF?)
   });
 
   if (!done) {
-    // score the list of available moves
-    const scoredOpenList = score(open, source, destination);
     // find the lowest score
-    const lowestF = findLowestF(scoredOpenList);
+    const lowestF = findLowestF(open);
 
     // remove the lowest score from the open list
     const lowest = open[lowestF];
     open.splice(lowestF, 1);
 
     // add it to the head of the closed list
-    closed.unshift(lowest);
+    closed.unshift(coordToString(lowest.position));
 
     // console.log(`Open: ${JSON.stringify(open)}`);
     // console.log(`Closed: ${JSON.stringify(closed)}`);
@@ -65,9 +65,9 @@ export const findPath = (source, destination, grid, open, closed) => {
 const findLowestF = list => {
   let lowest = 1000;
   let lowestIndex;
-  list.forEach((pos, i) => {
-    if (pos.g + pos.h < lowest) {
-      lowest = pos.g + pos.h;
+  list.forEach((item, i) => {
+    if (item.g + item.h < lowest) {
+      lowest = item.g + item.h;
       lowestIndex = i;
     }
   });
@@ -83,21 +83,18 @@ const findLowestF = list => {
  * returns an array of Scored position objects.
  * {position: Coordinate, g: Gscore, h: Hscore}
  */
-const score = (list, sourcePos, destination) => {
-  return list.map(pos => {
-    pos = stringToCoord(pos);
-    // calculate (G) - movement cost from start to this tile.
-    const gX = Math.abs(pos.x - sourcePos.x);
-    const gY = Math.abs(pos.y - sourcePos.y);
-    const G = gX + gY;
+const score = (pos, sourcePos, destination) => {
+  // calculate (G) - movement cost from start to this tile.
+  const gX = Math.abs(pos.x - sourcePos.x);
+  const gY = Math.abs(pos.y - sourcePos.y);
+  const G = gX + gY;
 
-    // calculate (H) - current square to destination;
-    const hX = Math.abs(pos.x - destination.x);
-    const hY = Math.abs(pos.y - destination.y);
-    const H = hX + hY;
+  // calculate (H) - current square to destination;
+  const hX = Math.abs(pos.x - destination.x);
+  const hY = Math.abs(pos.y - destination.y);
+  const H = hX + hY;
 
-    return { position: pos, g: G, h: H };
-  });
+  return { position: pos, g: G, h: H };
 };
 
 /**
