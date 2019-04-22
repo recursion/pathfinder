@@ -4,6 +4,17 @@ export const initialState = { path: [], found: false };
 const coordToString = coords => JSON.stringify(coords);
 const stringToCoord = str => JSON.parse(str);
 
+const hasPosition = (closedList, pos) => {
+  let has = false;
+  closedList.forEach(item => {
+    let itemPos = stringToCoord(item.position);
+    if (itemPos.x === pos.x && itemPos.y === pos.y) {
+      has = true;
+    }
+  });
+  return has;
+};
+
 export const findPath = (source, destination, grid, open, closed) => {
   open = open || [];
   closed = closed || [];
@@ -11,18 +22,21 @@ export const findPath = (source, destination, grid, open, closed) => {
 
   if (closed.length === 0) {
     // put the starting position on the closed list
-    closed.push(coordToString(source));
+    closed.push({ position: coordToString(source), parent: null });
   }
 
   // find the available movements from the current position (head of closed)
-  const availableMoves = getAvailableMoves(stringToCoord(closed[0]), grid);
+  const availableMoves = getAvailableMoves(
+    stringToCoord(closed[0].position),
+    grid
+  );
   availableMoves.forEach(pos => {
     // if pos is the destination
     // add it to the closed list and be done
     if (pos.x === destination.x && pos.y === destination.y) {
-      closed.unshift(coordToString(pos));
+      closed.unshift({ position: coordToString(pos), parent: closed[0] });
       done = true;
-    } else if (!closed.includes(coordToString(pos))) {
+    } else if (!hasPosition(closed, pos)) {
       // if pos is in the closed list
       // ignore it
       // if pos is not in the open list
@@ -47,13 +61,22 @@ export const findPath = (source, destination, grid, open, closed) => {
     open.splice(lowestF, 1);
 
     // add it to the head of the closed list
-    closed.unshift(coordToString(lowest.position));
+    closed.unshift({
+      position: coordToString(lowest.position),
+      parent: closed[0]
+    });
 
     // console.log(`Open: ${JSON.stringify(open)}`);
     // console.log(`Closed: ${JSON.stringify(closed)}`);
     return findPath(source, destination, grid, open, closed);
   } else {
-    return { path: closed.reverse(), found: true };
+    const path = [];
+    let node = closed[0];
+    while (node) {
+      path.push(node.position);
+      node = node.parent;
+    }
+    return { path, found: true };
   }
 };
 
