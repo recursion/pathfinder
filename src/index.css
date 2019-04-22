@@ -6125,6 +6125,24 @@ table {
 
 /* custom css */
 
+.btn {
+  font-weight: 700;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: .25rem;
+}
+
+.btn-blue {
+  background-color: #3490dc;
+  color: #fff;
+}
+
+.btn-blue:hover {
+  background-color: #2779bd;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;
