@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React from "react";
 import Location from "./Location";
 import {
   settings,
@@ -10,8 +10,10 @@ import {
   initialDestination
 } from "./config";
 
-const initialState = {
+export const initialState = {
   grid: {},
+  source: {},
+  destination: {},
   action: {
     type: "",
     locationType: "",
@@ -35,9 +37,11 @@ const makeGrid = (settings, source, destination) => {
   return grid;
 };
 
-const init = () => {
+export const init = () => {
   return {
     grid: makeGrid(settings, initialSource, initialDestination),
+    source: initialSource,
+    destination: initialDestination,
     action: initialState.action
   };
 };
@@ -57,7 +61,16 @@ const movePiece = (state, action) => {
     [state.action.position]: EMPTY,
     [coords]: state.action.locationType
   };
-  return { ...state, grid: nextGrid, action: initialState.action };
+  return {
+    ...state,
+    grid: nextGrid,
+    action: initialState.action,
+    source: state.action.locationType === SOURCE ? action.coords : state.source,
+    destination:
+      state.action.locationType === DESTINATION
+        ? action.coords
+        : state.destination
+  };
 };
 
 const paint = (state, action) => {
@@ -80,9 +93,17 @@ const paint = (state, action) => {
   };
 };
 
-const reducer = (state, action) => {
-  const coords = JSON.stringify(action.coords);
+export const reducer = (state, action) => {
+  const coords = JSON.stringify(action.coords || "");
   switch (action.type) {
+    case "RESET":
+      return init();
+
+    case "ADD_PATH":
+      const nextPath = [...state.path];
+      nextPath.push(action.coords);
+      return { ...state, path: nextPath };
+
     case "START_PAINT":
       switch (state.action.type) {
         case "MOVE":
@@ -131,9 +152,7 @@ const reducer = (state, action) => {
   }
 };
 
-const Grid = () => {
-  const [state, dispatch] = useReducer(reducer, initialState, init);
-
+const Grid = ({ grid, dispatch, path }) => {
   return (
     <svg
       width={settings.width}
@@ -141,24 +160,30 @@ const Grid = () => {
       fill="black"
       className="mt-10"
     >
-      {Object.keys(state.grid).map(key => {
+      {Object.keys(grid.grid).map(key => {
         const coords = JSON.parse(key);
         let highlight = false;
+        let markPath = false;
         if (
-          (state.action.locationType === SOURCE ||
-            state.action.locationType === DESTINATION) &&
-          state.action.position === key
+          (grid.action.locationType === SOURCE ||
+            grid.action.locationType === DESTINATION) &&
+          grid.action.position === key
         ) {
           highlight = true;
+        }
+        if (path.path.includes(key)) {
+          markPath = true;
+          console.log("PATH MARKED!");
         }
         return (
           <Location
             key={key}
             coords={coords}
-            type={state.grid[key]}
+            type={grid.grid[key]}
             settings={settings}
             dispatch={dispatch}
             highlight={highlight}
+            markPath={markPath}
           />
         );
       })}

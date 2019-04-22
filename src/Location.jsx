@@ -1,7 +1,14 @@
 import React from "react";
 import { colors } from "./config";
 
-const Location = ({ coords, type, settings, highlight, dispatch }) => {
+const Location = ({
+  coords,
+  type,
+  settings,
+  highlight,
+  dispatch,
+  markPath
+}) => {
   return (
     <rect
       x={coords.x * settings.tileSize}
@@ -9,6 +16,7 @@ const Location = ({ coords, type, settings, highlight, dispatch }) => {
       width={settings.tileSize}
       height={settings.tileSize}
       fill={highlight ? "lightblue" : colors[type]}
+      fillOpacity={markPath ? "0.5" : "1"}
       stroke="grey"
       onMouseDown={() => {
         dispatch({
