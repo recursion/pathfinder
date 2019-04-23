@@ -1,29 +1,6 @@
 import { WALL } from "./config";
 export const initialState = { path: [], found: false };
 
-const coordToString = coords => JSON.stringify(coords);
-
-/**
- * Score a list of positions based on A* G+H=F score system
- * see https://www.raywenderlich.com/3016-introduction-to-a-pathfinding for more scoring info.
- * @param {array} list
- * @param {Coordinate} sourcePos
- * @param {Coordinate} destination
- * returns an array of Scored position objects.
- * {position: Coordinate, g: Gscore, h: Hscore}
- */
-const score = (pos, sourcePos, destination) => {
-  // calculate (G) - movement cost from start to this tile.
-  const gX = Math.abs(pos.x - sourcePos.x);
-  const gY = Math.abs(pos.y - sourcePos.y);
-  const G = gX + gY;
-
-  // calculate (H) - current square to destination;
-  const H = distanceToEnd(pos, destination);
-
-  return { position: pos, g: G, h: H, f: G + H, parent: null };
-};
-
 /**
  * Given a position, check the 4 squares (up, down, left, right)
  * to see if they are valid moves
@@ -36,26 +13,26 @@ const getAvailableMoves = (currentPos, grid) => {
 
   // check left square
   const prevX = { ...currentPos, x: currentPos.x - 1 };
-  if (currentPos.x - 1 >= 0 && grid[coordToString(prevX)] !== WALL) {
-    available.push(prevX);
+  if (currentPos.x - 1 >= 0 && grid[JSON.stringify(prevX)] !== WALL) {
+    available.unshift(prevX);
   }
 
   // check top square
   const prevY = { ...currentPos, y: currentPos.y - 1 };
-  if (currentPos.y - 1 >= 0 && grid[coordToString(prevY)] !== WALL) {
-    available.push(prevY);
+  if (currentPos.y - 1 >= 0 && grid[JSON.stringify(prevY)] !== WALL) {
+    available.unshift(prevY);
   }
 
   // check right square
   const nextX = { ...currentPos, x: currentPos.x + 1 };
-  if (currentPos.x + 1 < 800 / 16 && grid[coordToString(nextX)] !== WALL) {
-    available.push(nextX);
+  if (currentPos.x + 1 < 800 / 16 && grid[JSON.stringify(nextX)] !== WALL) {
+    available.unshift(nextX);
   }
 
   // check bottom square
   const nextY = { ...currentPos, y: currentPos.y + 1 };
-  if (currentPos.y + 1 < 608 / 16 && grid[coordToString(nextY)] !== WALL) {
-    available.push(nextY);
+  if (currentPos.y + 1 < 608 / 16 && grid[JSON.stringify(nextY)] !== WALL) {
+    available.unshift(nextY);
   }
 
   return available;
@@ -94,11 +71,21 @@ export const findPath = (
     closedHash = closedHash || {};
     const startTime = Date.now();
 
-    if (open.length === 0) open.push(score(source, source, destination));
+    if (open.length === 0) {
+      const distance = distanceToEnd(source, destination);
+      const start = {
+        position: source,
+        g: 0,
+        h: distance,
+        f: distance,
+        parent: null
+      };
+      open.push(start);
+    }
 
-    //debugger;
     while (open.length > 0) {
       // remove item from top of open list
+      open.sort((a, b) => a.f > b.f);
       const current = open.shift();
       delete openHash[JSON.stringify(current.position)];
       closed.unshift(current);
@@ -121,18 +108,15 @@ export const findPath = (
         let node = {};
         node.position = children[i];
         node.g = current.g + 1;
-        node.h = distanceToEnd(node.position, destination);
+        node.h = distanceToEnd(node.position, destination) ** 2;
         node.f = node.g + node.h;
         node.parent = current;
 
         const openContains = openHash[JSON.stringify(node.position)];
-        if (openContains) {
-          if (openContains.g < node.g) {
-            continue;
-          }
+        if (openContains && openContains.g < node.g) {
+          continue;
         }
         open.push(node);
-        open.sort((a, b) => a.f > b.f);
         openHash[JSON.stringify(node.position)] = node;
       }
       if (Date.now() - startTime > 15) {
