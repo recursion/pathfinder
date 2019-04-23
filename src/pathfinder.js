@@ -41,9 +41,8 @@ const getAvailableMoves = (currentPos, grid) => {
 const backTrack = path => {
   const result = [];
   let node = path[0];
-  while (node) {
+  while (node.parent) {
     result.push(JSON.stringify(node.position));
-    if (!node.parent) break;
     node = node.parent;
   }
   return { path: result };
@@ -84,13 +83,18 @@ export const findPath = (
     }
 
     while (open.length > 0) {
+      // sort the open list by f score
+      open.sort((a, b) => a.f - b.f);
+
       // remove item from top of open list
-      open.sort((a, b) => a.f > b.f);
       const current = open.shift();
       delete openHash[JSON.stringify(current.position)];
+
+      // add to closed list
       closed.unshift(current);
       closedHash[JSON.stringify(current.position)] = current;
 
+      // destination check
       if (
         current.position.x === destination.x &&
         current.position.y === destination.y
@@ -105,12 +109,7 @@ export const findPath = (
           continue;
         }
 
-        let node = {};
-        node.position = children[i];
-        node.g = current.g + 1;
-        node.h = distanceToEnd(node.position, destination) ** 2;
-        node.f = node.g + node.h;
-        node.parent = current;
+        let node = Node(children[i], current, destination);
 
         const openContains = openHash[JSON.stringify(node.position)];
         if (openContains && openContains.g < node.g) {
@@ -129,4 +128,14 @@ export const findPath = (
       );
     }, 0);
   });
+};
+
+const Node = (position, parent, destination) => {
+  const node = {};
+  node.position = position;
+  node.g = parent.g + 1;
+  node.h = distanceToEnd(position, destination) ** 2;
+  node.f = node.g + node.h;
+  node.parent = parent;
+  return node;
 };
