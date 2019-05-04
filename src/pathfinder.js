@@ -54,79 +54,75 @@ const distanceToEnd = (pos, destination) => {
   return hX + hY;
 };
 
-export const findPath = (source, destination, grid, data) => {
-  debugger;
-  return new Promise((resolve, reject) => {
-    data = data || {};
-    const open = data.open || [];
-    const closed = data.closed || [];
-    const openHash = data.openHash || {};
-    const closedHash = data.closedHash || {};
-    const startTime = Date.now();
+export function* findPath(source, destination, grid) {
+  let open = [];
+  const closed = [];
+  const openHash = {};
+  const closedHash = {};
 
-    if (open.length === 0) {
-      const distance = distanceToEnd(source, destination);
-      const start = {
-        position: source,
-        g: 0,
-        h: distance,
-        f: distance,
-        parent: null
-      };
-      open.push(start);
+  if (open.length === 0) {
+    const distance = distanceToEnd(source, destination);
+    const start = {
+      position: source,
+      g: 0,
+      h: distance,
+      f: 0,
+      parent: null
+    };
+    open.push(start);
+  }
+
+  while (open.length > 0) {
+    // sort the open list by f score
+    open.sort((a, b) => a.f - b.f);
+
+    // remove item from top of open list
+    const current = open.shift();
+    delete openHash[JSON.stringify(current.position)];
+
+    // add to closed list
+    closed.unshift(current);
+    closedHash[JSON.stringify(current.position)] = current;
+
+    // destination check
+    if (
+      current.position.x === destination.x &&
+      current.position.y === destination.y
+    ) {
+      return backTrack(closed);
     }
 
-    while (open.length > 0) {
-      // sort the open list by f score
-      open.sort((a, b) => a.f - b.f);
+    const neighbors = getAvailableMoves(current.position, grid);
 
-      // remove item from top of open list
-      const current = open.shift();
-      delete openHash[JSON.stringify(current.position)];
-
-      // add to closed list
-      closed.unshift(current);
-      closedHash[JSON.stringify(current.position)] = current;
-
-      // destination check
-      if (
-        current.position.x === destination.x &&
-        current.position.y === destination.y
-      ) {
-        return resolve(backTrack(closed));
+    for (let i = 0; i < neighbors.length; i++) {
+      const neighbor = neighbors[i];
+      if (closedHash[JSON.stringify(neighbor)]) {
+        continue;
       }
 
-      const children = getAvailableMoves(current.position, grid);
+      let node = Node(neighbor, current, destination);
 
-      for (let i = 0; i < children.length; i++) {
-        if (closedHash[JSON.stringify(children[i])]) {
-          continue;
-        }
-
-        let node = Node(children[i], current, destination);
-
-        const openContains = openHash[JSON.stringify(node.position)];
-        if (openContains && openContains.g < node.g) {
-          continue;
-        }
+      const existsInOpenList = openHash[JSON.stringify(node.position)];
+      if (!existsInOpenList) {
         open.push(node);
         openHash[JSON.stringify(node.position)] = node;
-      }
-      if (Date.now() - startTime > 15) {
-        break;
+      } else if (existsInOpenList.g > node.g) {
+        // update existing item with current node data
+        openHash[JSON.stringify(node.position)] = node;
+        open = open.map(loc => {
+          if (
+            loc.position.x === node.position.x &&
+            loc.position.y === node.position.y
+          ) {
+            return node;
+          }
+          return loc;
+        });
       }
     }
-    setTimeout(() => {
-      const collected = {
-        open,
-        closed,
-        openHash,
-        closedHash
-      };
-      resolve(findPath(source, destination, grid, collected));
-    }, 0);
-  });
-};
+    yield backTrack(closed);
+  }
+}
 
 const Node = (position, parent, destination) => {
   const node = {};
