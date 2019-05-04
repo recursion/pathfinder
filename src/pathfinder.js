@@ -54,20 +54,14 @@ const distanceToEnd = (pos, destination) => {
   return hX + hY;
 };
 
-export const findPath = (
-  source,
-  destination,
-  grid,
-  open,
-  closed,
-  openHash,
-  closedHash
-) => {
+export const findPath = (source, destination, grid, data) => {
+  debugger;
   return new Promise((resolve, reject) => {
-    open = open || [];
-    closed = closed || [];
-    openHash = openHash || {};
-    closedHash = closedHash || {};
+    data = data || {};
+    const open = data.open || [];
+    const closed = data.closed || [];
+    const openHash = data.openHash || {};
+    const closedHash = data.closedHash || {};
     const startTime = Date.now();
 
     if (open.length === 0) {
@@ -123,9 +117,13 @@ export const findPath = (
       }
     }
     setTimeout(() => {
-      resolve(
-        findPath(source, destination, grid, open, closed, openHash, closedHash)
-      );
+      const collected = {
+        open,
+        closed,
+        openHash,
+        closedHash
+      };
+      resolve(findPath(source, destination, grid, collected));
     }, 0);
   });
 };
