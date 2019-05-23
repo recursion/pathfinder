@@ -83,10 +83,6 @@ export const reducer = (state, action) => {
     case "RESET":
       return init();
 
-    case "ADD_PATH":
-      const nextPath = [...state.path];
-      nextPath.push(action.coords);
-      return { ...state, path: nextPath };
 
     case "START_PAINT":
       switch (state.action.type) {
