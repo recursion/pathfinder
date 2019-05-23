@@ -2,6 +2,7 @@ import React, { useReducer, useState } from "react";
 import Grid from "./Grid";
 import { reducer, initialState, init } from "./reducer";
 import * as PathFinder from "./pathfinder";
+import Controls from './Controls';
 
 const pathFind = (state, setPath, pathfinder) => {
   const startTime = Date.now();
@@ -40,23 +41,12 @@ const App = () => {
       </header>
       <article className="flex flex-row justify-center items-center">
         <Grid state={state} dispatch={dispatch} path={path} />
-        <div className="border rounded p-5 flex flex-col justify-around items-start ml-5">
-          <button
-            className="btn btn-blue"
-            onClick={() => pathFind(state, setPath)}
-          >
-            Find Path
-          </button>
-          <button
-            className="btn btn-blue mt-3"
-            onClick={() => {
-              setPath(PathFinder.initialState);
-              dispatch({ type: "RESET" });
-            }}
-          >
-            Reset
-          </button>
-        </div>
+        <Controls
+          reset={() => {
+            setPath(PathFinder.initialState);
+            dispatch({ type: "RESET" });
+          }}
+          start={() => pathFind(state, setPath)} />
       </article>
     </div>
   );
