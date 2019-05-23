@@ -1,5 +1,5 @@
 import { WALL } from "./config";
-export const initialState = { path: [], found: false };
+export const initialState = { path: [], found: false, unreachable: false };
 
 /**
  * Given a position, check the 4 squares (up, down, left, right)
@@ -38,14 +38,14 @@ const getAvailableMoves = (currentPos, grid) => {
   return available;
 };
 
-const backTrack = path => {
+const backTrack = (path, found, unreachable) => {
   const result = [];
   let node = path[0];
   while (node.parent) {
     result.push(JSON.stringify(node.position));
     node = node.parent;
   }
-  return { path: result };
+  return { path: result, found, unreachable };
 };
 
 const distanceToEnd = (pos, destination) => {
@@ -89,7 +89,7 @@ export function* findPath(source, destination, grid) {
       current.position.x === destination.x &&
       current.position.y === destination.y
     ) {
-      return backTrack(closed);
+      return backTrack(closed, true);
     }
 
     const neighbors = getAvailableMoves(current.position, grid);
@@ -122,6 +122,7 @@ export function* findPath(source, destination, grid) {
     }
     yield backTrack(closed);
   }
+  return { path: [], found: false, unreachable: true };
 }
 
 const Node = (position, parent, destination) => {

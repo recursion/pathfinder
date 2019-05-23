@@ -817,6 +817,10 @@ table {
   background-color: #ffebef;
 }
 
+.bg-grey-transparent {
+  background-color: rgba(145, 145, 145, .5);
+}
+
 .hover\:bg-transparent:hover {
   background-color: transparent;
 }
@@ -1109,6 +1113,10 @@ table {
   background-color: #ffebef;
 }
 
+.hover\:bg-grey-transparent:hover {
+  background-color: rgba(145, 145, 145, .5);
+}
+
 .focus\:bg-transparent:focus {
   background-color: transparent;
 }
@@ -1399,6 +1407,10 @@ table {
 
 .focus\:bg-pink-lightest:focus {
   background-color: #ffebef;
+}
+
+.focus\:bg-grey-transparent:focus {
+  background-color: rgba(145, 145, 145, .5);
 }
 
 .bg-bottom {
@@ -1765,6 +1777,10 @@ table {
   border-color: #ffebef;
 }
 
+.border-grey-transparent {
+  border-color: rgba(145, 145, 145, .5);
+}
+
 .hover\:border-transparent:hover {
   border-color: transparent;
 }
@@ -2057,6 +2073,10 @@ table {
   border-color: #ffebef;
 }
 
+.hover\:border-grey-transparent:hover {
+  border-color: rgba(145, 145, 145, .5);
+}
+
 .focus\:border-transparent:focus {
   border-color: transparent;
 }
@@ -2347,6 +2367,10 @@ table {
 
 .focus\:border-pink-lightest:focus {
   border-color: #ffebef;
+}
+
+.focus\:border-grey-transparent:focus {
+  border-color: rgba(145, 145, 145, .5);
 }
 
 .rounded-none {
@@ -5129,6 +5153,10 @@ table {
   color: #ffebef;
 }
 
+.text-grey-transparent {
+  color: rgba(145, 145, 145, .5);
+}
+
 .hover\:text-transparent:hover {
   color: transparent;
 }
@@ -5421,6 +5449,10 @@ table {
   color: #ffebef;
 }
 
+.hover\:text-grey-transparent:hover {
+  color: rgba(145, 145, 145, .5);
+}
+
 .focus\:text-transparent:focus {
   color: transparent;
 }
@@ -5711,6 +5743,10 @@ table {
 
 .focus\:text-pink-lightest:focus {
   color: #ffebef;
+}
+
+.focus\:text-grey-transparent:focus {
+  color: rgba(145, 145, 145, .5);
 }
 
 .text-xs {
@@ -6143,6 +6179,11 @@ table {
   background-color: #2779bd;
 }
 
+.shifted {
+  -webkit-transform: translate(-50%);
+          transform: translate(-50%);
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;
@@ -6459,6 +6500,10 @@ table {
     background-color: #ffebef;
   }
 
+  .sm\:bg-grey-transparent {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -6751,6 +6796,10 @@ table {
     background-color: #ffebef;
   }
 
+  .sm\:hover\:bg-grey-transparent:hover {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -7041,6 +7090,10 @@ table {
 
   .sm\:focus\:bg-pink-lightest:focus {
     background-color: #ffebef;
+  }
+
+  .sm\:focus\:bg-grey-transparent:focus {
+    background-color: rgba(145, 145, 145, .5);
   }
 
   .sm\:bg-bottom {
@@ -7399,6 +7452,10 @@ table {
     border-color: #ffebef;
   }
 
+  .sm\:border-grey-transparent {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -7691,6 +7748,10 @@ table {
     border-color: #ffebef;
   }
 
+  .sm\:hover\:border-grey-transparent:hover {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -7981,6 +8042,10 @@ table {
 
   .sm\:focus\:border-pink-lightest:focus {
     border-color: #ffebef;
+  }
+
+  .sm\:focus\:border-grey-transparent:focus {
+    border-color: rgba(145, 145, 145, .5);
   }
 
   .sm\:rounded-none {
@@ -10747,6 +10812,10 @@ table {
     color: #ffebef;
   }
 
+  .sm\:text-grey-transparent {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -11039,6 +11108,10 @@ table {
     color: #ffebef;
   }
 
+  .sm\:hover\:text-grey-transparent:hover {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .sm\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -11329,6 +11402,10 @@ table {
 
   .sm\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .sm\:focus\:text-grey-transparent:focus {
+    color: rgba(145, 145, 145, .5);
   }
 
   .sm\:text-xs {
@@ -12058,6 +12135,10 @@ table {
     background-color: #ffebef;
   }
 
+  .md\:bg-grey-transparent {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .md\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -12350,6 +12431,10 @@ table {
     background-color: #ffebef;
   }
 
+  .md\:hover\:bg-grey-transparent:hover {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .md\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -12640,6 +12725,10 @@ table {
 
   .md\:focus\:bg-pink-lightest:focus {
     background-color: #ffebef;
+  }
+
+  .md\:focus\:bg-grey-transparent:focus {
+    background-color: rgba(145, 145, 145, .5);
   }
 
   .md\:bg-bottom {
@@ -12998,6 +13087,10 @@ table {
     border-color: #ffebef;
   }
 
+  .md\:border-grey-transparent {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .md\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -13290,6 +13383,10 @@ table {
     border-color: #ffebef;
   }
 
+  .md\:hover\:border-grey-transparent:hover {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .md\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -13580,6 +13677,10 @@ table {
 
   .md\:focus\:border-pink-lightest:focus {
     border-color: #ffebef;
+  }
+
+  .md\:focus\:border-grey-transparent:focus {
+    border-color: rgba(145, 145, 145, .5);
   }
 
   .md\:rounded-none {
@@ -16346,6 +16447,10 @@ table {
     color: #ffebef;
   }
 
+  .md\:text-grey-transparent {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .md\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -16638,6 +16743,10 @@ table {
     color: #ffebef;
   }
 
+  .md\:hover\:text-grey-transparent:hover {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .md\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -16928,6 +17037,10 @@ table {
 
   .md\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .md\:focus\:text-grey-transparent:focus {
+    color: rgba(145, 145, 145, .5);
   }
 
   .md\:text-xs {
@@ -17657,6 +17770,10 @@ table {
     background-color: #ffebef;
   }
 
+  .lg\:bg-grey-transparent {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -17949,6 +18066,10 @@ table {
     background-color: #ffebef;
   }
 
+  .lg\:hover\:bg-grey-transparent:hover {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -18239,6 +18360,10 @@ table {
 
   .lg\:focus\:bg-pink-lightest:focus {
     background-color: #ffebef;
+  }
+
+  .lg\:focus\:bg-grey-transparent:focus {
+    background-color: rgba(145, 145, 145, .5);
   }
 
   .lg\:bg-bottom {
@@ -18597,6 +18722,10 @@ table {
     border-color: #ffebef;
   }
 
+  .lg\:border-grey-transparent {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -18889,6 +19018,10 @@ table {
     border-color: #ffebef;
   }
 
+  .lg\:hover\:border-grey-transparent:hover {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -19179,6 +19312,10 @@ table {
 
   .lg\:focus\:border-pink-lightest:focus {
     border-color: #ffebef;
+  }
+
+  .lg\:focus\:border-grey-transparent:focus {
+    border-color: rgba(145, 145, 145, .5);
   }
 
   .lg\:rounded-none {
@@ -21945,6 +22082,10 @@ table {
     color: #ffebef;
   }
 
+  .lg\:text-grey-transparent {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -22237,6 +22378,10 @@ table {
     color: #ffebef;
   }
 
+  .lg\:hover\:text-grey-transparent:hover {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .lg\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -22527,6 +22672,10 @@ table {
 
   .lg\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .lg\:focus\:text-grey-transparent:focus {
+    color: rgba(145, 145, 145, .5);
   }
 
   .lg\:text-xs {
@@ -23256,6 +23405,10 @@ table {
     background-color: #ffebef;
   }
 
+  .xl\:bg-grey-transparent {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:hover\:bg-transparent:hover {
     background-color: transparent;
   }
@@ -23548,6 +23701,10 @@ table {
     background-color: #ffebef;
   }
 
+  .xl\:hover\:bg-grey-transparent:hover {
+    background-color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:focus\:bg-transparent:focus {
     background-color: transparent;
   }
@@ -23838,6 +23995,10 @@ table {
 
   .xl\:focus\:bg-pink-lightest:focus {
     background-color: #ffebef;
+  }
+
+  .xl\:focus\:bg-grey-transparent:focus {
+    background-color: rgba(145, 145, 145, .5);
   }
 
   .xl\:bg-bottom {
@@ -24196,6 +24357,10 @@ table {
     border-color: #ffebef;
   }
 
+  .xl\:border-grey-transparent {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:hover\:border-transparent:hover {
     border-color: transparent;
   }
@@ -24488,6 +24653,10 @@ table {
     border-color: #ffebef;
   }
 
+  .xl\:hover\:border-grey-transparent:hover {
+    border-color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:focus\:border-transparent:focus {
     border-color: transparent;
   }
@@ -24778,6 +24947,10 @@ table {
 
   .xl\:focus\:border-pink-lightest:focus {
     border-color: #ffebef;
+  }
+
+  .xl\:focus\:border-grey-transparent:focus {
+    border-color: rgba(145, 145, 145, .5);
   }
 
   .xl\:rounded-none {
@@ -27544,6 +27717,10 @@ table {
     color: #ffebef;
   }
 
+  .xl\:text-grey-transparent {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:hover\:text-transparent:hover {
     color: transparent;
   }
@@ -27836,6 +28013,10 @@ table {
     color: #ffebef;
   }
 
+  .xl\:hover\:text-grey-transparent:hover {
+    color: rgba(145, 145, 145, .5);
+  }
+
   .xl\:focus\:text-transparent:focus {
     color: transparent;
   }
@@ -28126,6 +28307,10 @@ table {
 
   .xl\:focus\:text-pink-lightest:focus {
     color: #ffebef;
+  }
+
+  .xl\:focus\:text-grey-transparent:focus {
+    color: rgba(145, 145, 145, .5);
   }
 
   .xl\:text-xs {
