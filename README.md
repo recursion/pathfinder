@@ -1,4 +1,21 @@
+This is a very simple react application that demos a simple A* pathfinding algorithm. At least partially inspired by: [this awesome pathfinding app](https://qiao.github.io/PathFinding.js/visual/).
+
+Demo available at: https://js-path-finder.surge.sh
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+# Instructions
+
+Move the source (red) or destination (blue) square, and then click on the new square to move it to a new location. 
+
+Click (and drag) on any green square to create a Wall (grey square). Click (and drag) on any grey square to create an empty (green location).
+
+## Issues/Todo
+[ ] Currently cannot stop an active pathfind with the reset button.
+[ ] Would be nice to provide more visual feedback about currently searched paths. A variety of options exist here. See: https://qiao.github.io/PathFinding.js/visual/
+[ ] Make a nice, full screen interface, with variable size tile options.
+[ ] Add other pathfinding algos.
+
 
 ## Available Scripts
 
