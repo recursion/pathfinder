@@ -4,31 +4,6 @@ import { reducer, initialState, init } from "./reducer";
 import * as PathFinder from "./pathfinder";
 import Controls from './Controls';
 
-const pathFind = (state, setPath, pathfinder) => {
-  const startTime = Date.now();
-  let pause = false;
-  let closed = {};
-  pathfinder =
-    pathfinder ||
-    PathFinder.findPath(state.source, state.destination, state.grid);
-  while (!closed.done) {
-    closed = pathfinder.next();
-    if (!closed.value) return;
-    setPath(closed.value);
-    if (Date.now() - startTime > 15) {
-      pause = true;
-      break;
-    }
-  }
-  if (pause) {
-    setTimeout(() => {
-      pathFind(state, setPath, pathfinder);
-    }, 0);
-  } else {
-    setPath(closed.value);
-  }
-};
-
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState, init);
   const [path, setPath] = useState(PathFinder.initialState);
@@ -46,7 +21,7 @@ const App = () => {
             setPath(PathFinder.initialState);
             dispatch({ type: "RESET" });
           }}
-          start={() => pathFind(state, setPath)} />
+          start={() => PathFinder.find(state, setPath)} />
       </article>
     </div>
   );

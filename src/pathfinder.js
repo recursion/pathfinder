@@ -1,6 +1,33 @@
 import { WALL } from "./config";
-export const initialState = { path: [], found: false, unreachable: false };
+export const initialState = { path: [], found: false, unreachable: false, working: false };
 
+export const find = ({ source, destination, grid }, setPath, pathfinder) => {
+  const startTime = Date.now();
+  let pause = false;
+  let closed = {};
+
+  pathfinder =
+    pathfinder ||
+    findPath(source, destination, grid);
+
+  while (!closed.done) {
+    closed = pathfinder.next();
+    if (!closed.value) return;
+    setPath(closed.value);
+    if (Date.now() - startTime > 15) {
+      pause = true;
+      break;
+    }
+  }
+
+  if (pause) {
+    setTimeout(() => {
+      find({ source, destination, grid }, setPath, pathfinder);
+    }, 0);
+  } else {
+    setPath(closed.value);
+  }
+};
 /**
  * Given a position, check the 4 squares (up, down, left, right)
  * to see if they are valid moves
@@ -54,7 +81,7 @@ const distanceToEnd = (pos, destination) => {
   return hX + hY;
 };
 
-export function* findPath(source, destination, grid) {
+function* findPath(source, destination, grid) {
   let open = [];
   const closed = [];
   const openHash = {};
